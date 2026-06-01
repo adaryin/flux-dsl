@@ -1,0 +1,37 @@
+{
+  "name": "fluxdsl",
+  "displayName": "FluxDSL",
+  "description": "FluxDSL language support — syntax highlighting, snippets",
+  "version": "0.1.0",
+  "publisher": "fluxdsl",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "fluxdsl",
+        "aliases": ["FluxDSL", "fx"],
+        "extensions": [".fx"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "fluxdsl",
+        "scopeName": "source.fx",
+        "path": "./syntaxes/fx.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "fluxdsl",
+        "path": "./snippets/snippets.json"
+      }
+    ]
+  }
+}

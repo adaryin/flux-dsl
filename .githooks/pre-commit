@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -eu
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+fx="$repo_root/fx"
+
+if [ ! -x "$fx" ]; then
+    echo "pre-commit: fx CLI not found at $fx" >&2
+    exit 1
+fi
+
+# Collect staged .fx files (excluding deletions)
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep '\.fx$' || true)
+
+if [ -z "$staged" ]; then
+    exit 0
+fi
+
+errors=0
+while IFS= read -r file; do
+    full="$repo_root/$file"
+    if [ ! -f "$full" ]; then
+        continue
+    fi
+    if ! "$fx" validate "$full" >/dev/null 2>&1; then
+        echo "pre-commit: validation failed for $file" >&2
+        "$fx" validate "$full" 2>&1 | sed 's/^/  /' >&2
+        errors=$((errors + 1))
+    fi
+done <<< "$staged"
+
+if [ "$errors" -gt 0 ]; then
+    echo "pre-commit: $errors .fx file(s) failed validation — aborting commit" >&2
+    exit 1
+fi

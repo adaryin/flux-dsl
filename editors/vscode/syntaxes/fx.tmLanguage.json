@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "FluxDSL",
+  "scopeName": "source.fx",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#values" },
+    { "include": "#punctuation" },
+    { "include": "#bare_keys" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [{
+        "name": "comment.line.number-sign.fx",
+        "begin": "#",
+        "end": "$"
+      }]
+    },
+    "strings": {
+      "patterns": [{
+        "name": "string.quoted.double.fx",
+        "begin": "\"",
+        "end": "\"",
+        "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.fx" } },
+        "endCaptures": { "0": { "name": "punctuation.definition.string.end.fx" } },
+        "patterns": [{
+          "name": "constant.character.escape.fx",
+          "match": "\\\\."
+        }]
+      }]
+    },
+    "keywords": {
+      "patterns": [
+        { "name": "keyword.control.include.fx", "match": "\\binclude\\b" },
+        { "name": "keyword.control.schema.fx",  "match": "@schema\\b" },
+        { "name": "keyword.control.schema.fx",  "match": "\\b_schema\\b" }
+      ]
+    },
+    "values": {
+      "patterns": [
+        { "name": "constant.language.boolean.fx", "match": "\\b(?:true|false)\\b" },
+        { "name": "constant.language.null.fx",    "match": "\\bnull\\b" },
+        { "name": "constant.numeric.fx",          "match": "-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.section.braces.fx",   "match": "[{}]" },
+        { "name": "punctuation.section.brackets.fx", "match": "[\\[\\]]" },
+        { "name": "keyword.operator.pipe.fx",        "match": "\\|" },
+        { "name": "punctuation.separator.fx",        "match": "[:,\n]" }
+      ]
+    },
+    "bare_keys": {
+      "patterns": [{
+        "name": "entity.name.tag.fx",
+        "match": "(?x)
+          (?<=[\\s{,]|^)
+          (
+            (?:[a-zA-Z_]\\w*)
+            |
+            (?:-?[0-9]\\w*)
+          )
+          (?=\\s*:)
+        "
+      }]
+    }
+  },
+  "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}

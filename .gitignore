@@ -1,0 +1,35 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# jqwik property-based testing database
+.jqwik-database
+
+# Maven wrapper (not used)
+.mvn/
+
+# Internal docs
+remarks.md

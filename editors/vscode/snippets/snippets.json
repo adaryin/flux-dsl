@@ -1,0 +1,67 @@
+{
+  "Basic config": {
+    "scope": "fluxdsl",
+    "prefix": "config",
+    "body": [
+      "# ${1:description}",
+      "app {",
+      "  name: \"${2:myapp}\"",
+      "  version: \"${3:1.0.0}\"",
+      "  ${4}",
+      "}"
+    ],
+    "description": "Basic FluxDSL config skeleton"
+  },
+  "Include": {
+    "scope": "fluxdsl",
+    "prefix": "include",
+    "body": ["include \"${1:path}.fx\""],
+    "description": "Include another .fx file"
+  },
+  "Schema": {
+    "scope": "fluxdsl",
+    "prefix": "schema",
+    "body": ["@schema \"${1:file}.fx\""],
+    "description": "External schema reference"
+  },
+  "Inline schema": {
+    "scope": "fluxdsl",
+    "prefix": "_schema",
+    "body": [
+      "_schema {",
+      "  ${1:key}: { type: \"${2:string}\" }",
+      "}"
+    ],
+    "description": "Inline schema definition"
+  },
+  "Block string": {
+    "scope": "fluxdsl",
+    "prefix": "block",
+    "body": [
+      "${1:key}: {|",
+      "  ${2:text}",
+      "|}"
+    ],
+    "description": "Multi-line literal block string"
+  },
+  "List": {
+    "scope": "fluxdsl",
+    "prefix": "list",
+    "body": [
+      "${1:items}: [",
+      "  ${2:value}",
+      "]"
+    ],
+    "description": "List value"
+  },
+  "Object": {
+    "scope": "fluxdsl",
+    "prefix": "obj",
+    "body": [
+      "${1:key} {",
+      "  ${2}",
+      "}"
+    ],
+    "description": "Nested object"
+  }
+}
