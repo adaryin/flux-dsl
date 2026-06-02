@@ -34,7 +34,7 @@
 
 | FX                          | YAML               | JSON      | TOML               | HCL            |
 |-----------------------------|---------------------|-----------|--------------------|----------------|
-| `text: {\| ... \|}`          | `text: \|`          | `"..."\n` | `text = """..."""` | `<<EOT...EOT`  |
+| `text: { \| ... }`           | `text: \|`          | `"..."\n` | `text = """..."""` | `<<EOT...EOT`  |
 | auto-dedent                 | literal block      | escape    | literal            | heredoc        |
 
 ## Includes / imports

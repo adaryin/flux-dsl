@@ -52,7 +52,7 @@ fx parse hello.fx
 | Null           | `extra: null`                         | `extra: ~`               |
 | Object         | `obj { key: "v" }` or `obj: { ... }`  | `obj:\n  key: v`         |
 | List           | `list: [ 1 2 3 ]`                     | `list:\n  - 1\n  - 2`    |
-| Block string   | `text: { \| ... \| }`                  | `text: \|`               |
+| Block string   | `text: { \| ... }`                     | `text: \|`               |
 | Include        | `include "base.fx"`                   | N/A                      |
 | Schema         | `@schema "schema.fx"`                 | N/A                      |
 
@@ -80,11 +80,12 @@ Shorthand inline: `key: { sub: "value" }`
 Block strings auto-dedent, no escaping needed:
 
 ```
-sql: {|
+sql: {
+  |
   SELECT *
   FROM users
   WHERE active = true
-|}
+}
 ```
 
 ## 6. Includes
