@@ -41,7 +41,6 @@ def cmd_query(args):
 
 def cmd_validate(args):
     """Validate a .fx file against its schema."""
-    """Validate a .fx file against its schema."""
     try:
         result, errors = validate(str(args.path), strict=args.strict)
         for e in errors:
@@ -54,21 +53,19 @@ def cmd_validate(args):
 
 
 def cmd_fmt(args):
-    """Format a .fx file (parse + re-serialize to JSON, then back)."""
-    """Format a .fx file (parse + re-serialize to JSON, then back)."""
+    """Pretty-print a .fx file as formatted JSON."""
     try:
         text = args.path.read_text()
         ast = parse(text)
         root = to_dto(ast)
-        print(to_json(root))
+        print(json.dumps(root, indent=2, ensure_ascii=False))
     except (LexerError, ParserError) as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 
 def cmd_json(args):
-    """Convert .fx to JSON round-trip format."""
-    """Convert .fx to JSON round-trip format."""
+    """Convert .fx to DTO JSON round-trip format."""
     try:
         text = args.path.read_text()
         ast = parse(text)
@@ -81,7 +78,6 @@ def cmd_json(args):
 
 def cmd_clean_json(args):
     """Convert .fx to clean JSON (no type discriminators)."""
-    """Convert .fx to clean JSON (no type discriminators)."""
     try:
         print(fx_to_json(str(args.path)))
     except (LexerError, ParserError) as e:
@@ -90,7 +86,6 @@ def cmd_clean_json(args):
 
 
 def cmd_yaml(args):
-    """Convert .fx to YAML."""
     """Convert .fx to YAML."""
     try:
         print(fx_to_yaml(str(args.path)))
@@ -103,7 +98,6 @@ def cmd_yaml(args):
 
 
 def cmd_yaml2fx(args):
-    """Convert YAML to .fx."""
     """Convert YAML to .fx."""
     try:
         print(yaml_to_fx(str(args.path)))

@@ -52,7 +52,7 @@ fx parse hello.fx
 | Null           | `extra: null`                         | `extra: ~`               |
 | Object         | `obj { key: "v" }` or `obj: { ... }`  | `obj:\n  key: v`         |
 | List           | `list: [ 1 2 3 ]`                     | `list:\n  - 1\n  - 2`    |
-| Block string   | `text: { \| ... \| }`                  | `text: \|`               |
+| Block string   | `text: { \| ... }`                     | `text: \|`               |
 | Include        | `include "base.fx"`                   | N/A                      |
 | Schema         | `@schema "schema.fx"`                 | N/A                      |
 
@@ -80,11 +80,12 @@ Shorthand inline: `key: { sub: "value" }`
 Block strings auto-dedent, no escaping needed:
 
 ```
-sql: {|
+sql: {
+  |
   SELECT *
   FROM users
   WHERE active = true
-|}
+}
 ```
 
 ## 6. Includes
@@ -115,11 +116,11 @@ Validate your data with external or inline schemas:
 Or inline:
 
 ```
+_schema {
+  name: { type: "string", required: true }
+  port: { type: "number", default: 8080 }
+}
 app {
-  _schema {
-    name: { type: "string", required: true }
-    port: { type: "number", default: 8080 }
-  }
   name: "myapp"
 }
 ```
@@ -133,7 +134,7 @@ fx parse file.fx                # parse and pretty-print AST
 fx parse --strict file.fx       # strict mode (require quoted strings, no includes)
 fx validate file.fx             # validate against schema
 fx validate --strict file.fx    # strict validation (rejects unknown fields)
-fx fmt file.fx                  # format as DTO JSON
+fx fmt file.fx                  # pretty-print as formatted JSON
 fx json file.fx                 # DTO JSON round-trip
 fx to-json file.fx              # clean JSON (no type tags)
 fx to-yaml file.fx              # YAML output

@@ -1,4 +1,5 @@
-# Kubernetes Deployment + Service in FluxDSL
+# Kubernetes Deployment in FluxDSL
+# (Multi-resource docs not yet supported — one document per .fx file)
 
 apiVersion: "apps/v1"
 kind: "Deployment"
@@ -95,31 +96,3 @@ spec {
   }
 }
 
-# Separate document: Service object
-apiVersion: "v1"
-kind: "Service"
-metadata {
-  name: "myapp"
-  namespace: "production"
-}
-
-spec {
-  selector {
-    app: "myapp"
-  }
-  ports [
-    {
-      port: 80
-      targetPort: 8080
-      protocol: "TCP"
-      name: "http"
-    }
-    {
-      port: 443
-      targetPort: 8080
-      protocol: "TCP"
-      name: "https"
-    }
-  ]
-  type: "ClusterIP"
-}

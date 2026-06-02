@@ -55,10 +55,10 @@ def _process_node(ast, current_path, strict, context="data"):
     merged_schema = {}
     if schema_path is not None:
         ext_path = _resolve(current_path, schema_path)
-        ext_ast = _read_and_parse(ext_path)
-        for ext_node in ext_ast:
-            if ext_node.get("type") == "pair":
-                merged_schema[ext_node["key"]] = ext_node["value"]
+        ext_root, ext_errors = _process_file(ext_path, strict, context="schema")
+        if ext_errors:
+            errors.extend(ext_errors)
+        merged_schema = _items_to_map(ext_root)
     merged_schema.update(schema)
 
     if not merged_schema:
