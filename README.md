@@ -30,7 +30,7 @@ A declarative configuration DSL (`.fx` files). Think YAML without the indentatio
 | Boolean | `active: true` | `active: true` |
 | Object | `app { name: "x" }` | `app:\n  name: x` |
 | List | `ports: [ 80 443 ]` | `ports:\n  - 80\n  - 443` |
-| Block string | `sql: { \| SELECT * }` | `sql: \|` (literal) |
+| Block string | `sql: { \| ... }` (content on next line) | `sql: \|` (literal) |
 | Comment | `# comment` | `# comment` |
 | Include | `include "base.fx"` | N/A (deep-merge) |
 | Schema | `@schema "schema.fx"` | N/A |
@@ -78,7 +78,7 @@ database {
 ```bash
 ./fx parse <file.fx>               # parse and pretty-print AST
 ./fx validate <file.fx>            # validate against schema
-./fx fmt <file.fx>                 # format as DTO JSON
+./fx fmt <file.fx>                 # pretty-print as formatted JSON
 ./fx json <file.fx>                # DTO JSON round-trip
 ./fx to-json <file.fx>             # clean JSON
 ./fx to-yaml <file.fx>             # YAML output

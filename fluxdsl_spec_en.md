@@ -42,7 +42,7 @@
     *   **Null:** `null`.
 *   **Colon:** The colon `:` between a key and its value is **optional** for all value types. Both `key: "value"` and `key "value"` are valid.
 *   **No Logic:** Programming keywords (`if`, `for`, `func`) are not supported as language constructs and are treated as regular string keys if used.
-*   **Reserved Keys:** The key name `_schema` is **reserved** for inline schema definitions (see §2.5.2). It is intercepted during processing and not treated as regular data.
+*   **Reserved Keys:** The key name `_schema` is **reserved** for inline schema definitions (see §2.5.2). It is intercepted during validation and not treated as regular data.
 
 ### 2.3. Objects and Lists
 *   **Objects:**
@@ -51,15 +51,15 @@
     *   **Blank lines** between pairs are allowed and ignored.
     *   **Duplicate keys:** If the same key appears more than once at the same level, the **last** occurrence wins. Implementations must not error on duplicates.
 *   **Lists:**
-    *   Always enclosed in square brackets `[ ... ]`.
-    *   Elements are separated by commas `,` or newlines.
-    *   A trailing comma after the last element is **optional**.
+     *   Always enclosed in square brackets `[ ... ]`.
+     *   Elements are separated by whitespace, commas `,`, or newlines (any mix).
+     *   A trailing comma after the last element is **optional**.
     *   **Important:** The list marker `-` (as used in YAML) is **prohibited**.
     *   Elements can be primitives or objects `{ ... }`.
 
 ### 2.4. Multi-line Strings (String Blocks)
 Ideal for SQL queries, JSON inside strings, scripts, or large text blocks.
-*   **Syntax:** `key: { | ... }`
+*   **Syntax:** `key: {\n  |\n  ...\n}` — the pipe `|` must be on its own line, followed by content, closed with `}`.
 *   The pipe symbol `|` inside `{}` followed by newline enables literal mode.
 *   **Dedentation:** The parser automatically calculates the minimum indentation among all lines in the block and trims that number of spaces from each line.
 *   Inside the block, **any characters** (`{}`, `#`, `:`, `"`) are allowed **without escaping**.
@@ -75,7 +75,7 @@ Ideal for SQL queries, JSON inside strings, scripts, or large text blocks.
 *   **Syntax:** `@schema "path/to/file.fx"`
 *   **Logic:** Points to an external file containing validation rules. Schema content is **not merged** with data; it serves as a validation blueprint.
 *   **Path Resolution:** Paths are resolved relative to the directory of the current file.
-*   **Inline Schema:** Alternatively, use the reserved `_schema { ... }` key inside a data file for local rules. The `_schema` key is intercepted during parsing and is not included in the output data.
+*   **Inline Schema:** Alternatively, use the reserved `_schema { ... }` key at the top level of a data file for local rules. The `_schema` key is intercepted during validation and is not included in the output data.
 *   **Restriction:** The `@schema` directive is **prohibited** inside schema files. An implementation must raise an error if a schema file references another schema.
 
 ---
@@ -86,7 +86,7 @@ FluxDSL supports data validation against a schema and automatic default value in
 
 **Validation Rules (Descriptors):**
 In a schema (external file or `_schema` block), values are replaced by rule objects containing:
-*   `type`: `"string"`, `"number"`, `"bool"`, `"list"`, `"object"`.
+*   `type`: `"string"`, `"number"`, `"bool"`, `"null"`, `"list"`, `"object"`.
 *   `required`: `true`/`false`.
 *   `default`: Default value (injected during normalization if the key is missing).
 *   `enum`: List of allowed values (e.g., `["dev", "prod"]`).
@@ -134,7 +134,7 @@ block_string = "{" , gap , "|" , newline , text_block , gap , "}" ;
 text_block   = { line } ; (* Dedent logic applies here *)
 
 inline_list  = "[" , gap , [ list_elements ] , gap , "]" ;
-list_elements = ( value | block_object ) , { gap , ( "," | newline ) , gap , ( value | block_object ) } , [ gap , ( "," | newline ) ] ;
+list_elements = ( value | block_object | block_string ) , { gap , ( value | block_object | block_string ) } ;
 
 (* Character Classes *)
 letter       = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
@@ -410,6 +410,19 @@ fx query deploy.fx .secrets.db_password     # → { from_vault: "prod/db/passwor
 
 ---
 
-## 9. License
+## 9. JSON / YAML Round-Trip Conventions
+
+When converting between `.fx` and clean JSON or YAML (without type discriminators), the following conventions apply:
+
+| FX construct | JSON / YAML key |
+|---|---|
+| `include "..."` (top-level) | `"$include"` (string) or `"$include"` (array for multiple) |
+| `@schema "..."` (top-level) | `"$schema"` (string) or `"$schema"` (array for multiple) |
+| `include "..."` (inside object) | `"$include"` on the same object |
+| `@schema "..."` (inside object) | `"$schema"` on the same object |
+
+Special keys `$include` and `$schema` are reserved for round-trip fidelity. During `.fx` → JSON/YAML conversion, native directives are mapped to these keys. During JSON/YAML → `.fx` conversion, they are mapped back.
+
+## 10. License
 
 The **FluxDSL** specification is provided as an open concept. You are free to implement parsers, serializers, validators, and tools for this format in your projects.
