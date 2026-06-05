@@ -10,7 +10,7 @@ indentation tax — uses `{}` for objects and `[]` for lists.
 No installation needed. Use the Python reference parser directly:
 
 ```bash
-git clone https://github.com/your-org/fluxdsl.git
+git clone https://github.com/adaryin/fluxdsl.git
 cd fluxdsl
 alias fx='PYTHONPATH=parsers/python python3 -m fluxdsl.cli'
 ```
